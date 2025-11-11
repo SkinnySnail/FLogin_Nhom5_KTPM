@@ -11,19 +11,19 @@
 
 ### Kết quả cuối cùng:
 
-- ✅ **42 Test Cases** - Tất cả **PASS** 🟢
+- ✅ **42 Test Cases** - Tất cả **PASS** 🟢 _(bao gồm 34 BONUS tests)_
 - ✅ **7 File Java** được tạo (Service, DTO, Utility, Test)
-- ✅ **Coverage 100%** cho tất cả business logic
+- ✅ **Coverage 100%** cho tất cả business logic _(yêu cầu >= 85%)_
 
 ### Test Breakdown:
 
-| Loại Test                 | Số Lượng | Trạng Thái           |
-| ------------------------- | -------- | -------------------- |
-| FloginApplicationTests    | 1        | ✅ PASS              |
-| AuthService Unit Tests    | 3        | ✅ PASS              |
-| ProductService Unit Tests | 4        | ✅ PASS              |
-| ValidationUtil Unit Tests | 34       | ✅ PASS              |
-| **TỔNG**                  | **42**   | **✅ BUILD SUCCESS** |
+| Loại Test                 | Số Lượng | Trạng Thái                           |
+| ------------------------- | -------- | ------------------------------------ |
+| FloginApplicationTests    | 1        | ✅ PASS                              |
+| AuthService Unit Tests    | 3        | ✅ PASS (Yêu cầu bắt buộc)           |
+| ProductService Unit Tests | 4        | ✅ PASS (Yêu cầu bắt buộc)           |
+| ValidationUtil Unit Tests | 34       | ✅ PASS **(BONUS - Không bắt buộc)** |
+| **TỔNG**                  | **42**   | **✅ BUILD SUCCESS**                 |
 
 ---
 
@@ -127,7 +127,7 @@ String description   // Mô tả (<= 500 ký tự)
 
 ### **3. Utility Layer (Validation Rules)**
 
-#### 📄 `src/main/java/com/flogin/util/ValidationUtil.java`
+#### 📄 `src/main/java/com/flogin/util/ValidationUtil.java` **(BONUS - Không bắt buộc trong Câu 2)**
 
 **Tác dụng:**
 
@@ -248,16 +248,16 @@ if (!error.isEmpty()) {
 
 ---
 
-#### 📄 `src/test/java/com/flogin/util/ValidationUtilTest.java`
+#### 📄 `src/test/java/com/flogin/util/ValidationUtilTest.java` **(BONUS - Không bắt buộc)**
 
 **Tác dụng:**
 
 - Test tất cả validation rules
 - Kiểm tra boundary values, edge cases
 
-**34 Test Cases:**
+**34 Test Cases:** _(Yêu cầu PDF chỉ test validation trong AuthService & ProductService)_
 
-##### **Username Tests (8 test cases):**
+##### **Username Tests (8 test cases):** **(BONUS)**
 
 ```
 ✅ TC_LOGIN_BE_04: Username rỗng → lỗi
@@ -270,7 +270,7 @@ if (!error.isEmpty()) {
 (+1 edge case khác)
 ```
 
-##### **Password Tests (8 test cases):**
+##### **Password Tests (8 test cases):** **(BONUS)**
 
 ```
 ✅ TC_LOGIN_BE_11: Password rỗng → lỗi
@@ -283,7 +283,7 @@ if (!error.isEmpty()) {
 ✅ TC_LOGIN_BE_18: Password = null → lỗi
 ```
 
-##### **Product Name Tests (4 test cases):**
+##### **Product Name Tests (4 test cases):** **(BONUS)**
 
 ```
 ✅ TC_PRODUCT_BE_05: Product name rỗng → lỗi
@@ -292,7 +292,7 @@ if (!error.isEmpty()) {
 ✅ TC_PRODUCT_BE_08: Product name hợp lệ (Laptop Dell XPS 13) → OK
 ```
 
-##### **Price Tests (6 test cases):**
+##### **Price Tests (6 test cases):** **(BONUS)**
 
 ```
 ✅ TC_PRODUCT_BE_09: Price = 0 → lỗi
@@ -300,20 +300,20 @@ if (!error.isEmpty()) {
 ✅ TC_PRODUCT_BE_11: Price vượt max (1 tỷ) → lỗi
 ✅ TC_PRODUCT_BE_12: Price = 1 (min) → OK
 ✅ TC_PRODUCT_BE_13: Price = 999,999,999 (max) → OK
-✅ TC_PRODUCT_BE_14: Price = 15,000,000 (normal) → OK
+✅ TC_PRODUCT_BE_14: Price hợp lệ (15,000,000) → OK
 ```
 
-##### **Quantity Tests (5 test cases):**
+##### **Quantity Tests (5 test cases):** **(BONUS)**
 
 ```
 ✅ TC_PRODUCT_BE_15: Quantity âm (-1) → lỗi
 ✅ TC_PRODUCT_BE_16: Quantity vượt max (100,000) → lỗi
 ✅ TC_PRODUCT_BE_17: Quantity = 0 → OK
 ✅ TC_PRODUCT_BE_18: Quantity = 99,999 (max) → OK
-✅ TC_PRODUCT_BE_19: Quantity = 10 (normal) → OK
+✅ TC_PRODUCT_BE_19: Quantity hợp lệ (10) → OK
 ```
 
-##### **Description Tests (4 test cases):**
+##### **Description Tests (4 test cases):** **(BONUS)**
 
 ```
 ✅ TC_PRODUCT_BE_20: Description rỗng → OK (optional)
@@ -435,13 +435,13 @@ cd backend\flogin
 
 ### **ValidationUtil Coverage:**
 
-- ✅ **Username:** Empty, Too short, Too long, Invalid chars, Valid, Null
-- ✅ **Password:** Empty, Too short, Too long, No letter, No number, Valid, Null
-- ✅ **Product Name:** Empty, Too short, Too long, Valid
-- ✅ **Product Price:** Zero, Negative, Too high, Valid min, Valid max, Valid normal
-- ✅ **Product Quantity:** Negative, Too high, Valid zero, Valid max, Valid normal
-- ✅ **Product Description:** Empty, Too long, Valid max, Valid normal
-- **Coverage: 100%**
+- ✅ **Username:** Empty, Too short, Too long, Invalid chars, Valid, Null **(BONUS - 8 tests)**
+- ✅ **Password:** Empty, Too short, Too long, No letter, No number, Valid, Null **(BONUS - 8 tests)**
+- ✅ **Product Name:** Empty, Too short, Too long, Valid **(BONUS - 4 tests)**
+- ✅ **Product Price:** Zero, Negative, Too high, Valid min, Valid max, Valid normal **(BONUS - 6 tests)**
+- ✅ **Product Quantity:** Negative, Too high, Valid zero, Valid max, Valid normal **(BONUS - 5 tests)**
+- ✅ **Product Description:** Empty, Too long, Valid max, Valid normal **(BONUS - 4 tests)**
+- **Coverage: 100%** _(Tổng: 34 BONUS tests)_
 
 ---
 
@@ -491,37 +491,55 @@ assertNull(result);                         // Kiểm tra là null
 ## 📊 Kết Quả Cuối Cùng
 
 ```
-✅ 42 TESTS PASSED
+✅ 42 TESTS PASSED (Yêu cầu: 7 tests bắt buộc + 35 BONUS tests)
 ✅ 0 FAILURES
 ✅ 0 ERRORS
 ✅ BUILD SUCCESS
-✅ COVERAGE 100%
+✅ COVERAGE 100% (Yêu cầu: >= 85%)
 
 Files Created:
-├─ AuthService.java
-├─ AuthResponse.java
-├─ ProductService.java
-├─ ProductDto.java
-├─ ValidationUtil.java
-├─ AuthServiceTest.java
-├─ ProductServiceTest.java
-└─ ValidationUtilTest.java
+├─ AuthService.java (Yêu cầu bắt buộc)
+├─ AuthResponse.java (Yêu cầu bắt buộc)
+├─ ProductService.java (Yêu cầu bắt buộc)
+├─ ProductDto.java (Yêu cầu bắt buộc)
+├─ ValidationUtil.java (BONUS - Không bắt buộc)
+├─ AuthServiceTest.java (Yêu cầu bắt buộc - 3 tests)
+├─ ProductServiceTest.java (Yêu cầu bắt buộc - 4 tests)
+└─ ValidationUtilTest.java (BONUS - 34 tests không bắt buộc)
 ```
 
 ---
 
 ## 🚀 Bước Tiếp Theo (11/11)
 
-1. **Commit code** lên Git branch `back_end_dev`
-2. **Bắt đầu Câu 2 (Integration Testing)**
+1. ~~**Commit code** lên Git branch `back_end_dev`~~ ✅ Đã xong
+2. **Bắt đầu Câu 3 (Integration Testing)** 🔴 **CÔNG VIỆC CHÍNH NGÀY 11/11**
 
+   - AuthController.java
+   - ProductController.java
    - AuthControllerIntegrationTest.java
    - ProductControllerIntegrationTest.java
    - Test API endpoints với MockMvc
 
-3. **Phối hợp với Team FE**
+3. **Phối hợp với Team FE** _(Optional)_
    - Thịnh & Thái làm validation.test.js (Jest)
    - Ensure DTOs/JSON format khớp nhau
+
+---
+
+**📌 GHI CHÚ VỀ PHẠM VI CÔNG VIỆC:**
+
+**YÊU CẦU BẮT BUỘC (Câu 2 - 20 điểm):**
+
+- ✅ AuthService + AuthServiceTest (3 tests)
+- ✅ ProductService + ProductServiceTest (4 tests)
+- ✅ Coverage >= 85%
+
+**PHẦN BỔ SUNG (BONUS - Không bắt buộc):**
+
+- ✅ ValidationUtil + ValidationUtilTest (34 tests)
+- ✅ Coverage 100% (vượt yêu cầu 85%)
+- ✅ Documentation chi tiết (file này)
 
 ---
 
