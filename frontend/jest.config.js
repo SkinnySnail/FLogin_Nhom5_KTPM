@@ -1,21 +1,55 @@
+// jest.config.js - CẬP NHẬT để fix CSS import
 module.exports = {
-  // Cho biết thông tin coverage có nên được thu thập trong khi thực thi test hay không
-  collectCoverage: true,
+  // Môi trường test
+  testEnvironment: 'jsdom',
+  
+  // Module file extensions
+  moduleFileExtensions: ['js', 'jsx', 'json'],
+  
+  // Setup file
+  setupFilesAfterEnv: ['<rootDir>/setupTests.js'],
 
-  // Một mảng các mẫu glob cho biết một tập hợp các tệp mà thông tin coverage nên được thu thập
+  // Module name mapper - PHẢI ĐẶT TRƯỚC transform
+  moduleNameMapper: {
+    '\\.(css|less|scss|sass)$': '<rootDir>/__mocks__/styleMock.js',
+    '\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$': '<rootDir>/__mocks__/fileMock.js'
+  },
+
+  // Transform files
+  transform: {
+    '^.+\\.(js|jsx)$': 'babel-jest'
+  },
+
+  // Thu thập coverage
+  collectCoverage: true,
   collectCoverageFrom: [
-    'src/utils/**/*.{js,jsx,ts,tsx}',
-    '!**/node_modules/**',
-    '!**/vendor/**'
+    'src/utils/**/*.{js,jsx}',
+    'src/components/**/*.{js,jsx}',
+    '!src/index.js',
+    '!src/App.js',
+    '!src/setupTests.js',
+    '!**/node_modules/**'
   ],
 
-  // Thư mục nơi Jest sẽ xuất các tệp coverage của mình
+  // Coverage directory
   coverageDirectory: 'coverage',
 
-  // Danh sách tên các reporter mà Jest sử dụng khi ghi báo cáo coverage
-  coverageReporters: ['json', 'text', 'lcov', 'clover'],
+  // Coverage reporters
+  coverageReporters: ['json', 'text', 'lcov', 'clover', 'html'],
 
-  // Môi trường test sẽ được sử dụng để testing
-  testEnvironment: 'jsdom',
-  setupFilesAfterEnv: ['<rootDir>/setupTests.js'],
+  // Coverage thresholds
+  coverageThreshold: {
+    global: {
+      statements: 80,
+      branches: 80,
+      functions: 80,
+      lines: 80
+    }
+  },
+
+  // Test match patterns
+  testMatch: [
+    '**/src/tests/**/*.test.js',
+    '**/src/tests/**/*.spec.js'
+  ]
 };

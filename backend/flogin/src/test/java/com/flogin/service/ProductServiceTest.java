@@ -131,4 +131,33 @@ class ProductServiceTest {
         assertTrue(result);
         verify(productRepository).deleteById(productId);
     }
+
+    @Test
+    @DisplayName("TC_PRODUCT_BE_05: Lấy sản phẩm không tồn tại")
+    void testGetProductById_NotFound() {
+        // Arrange
+        Long productId = 999L;
+        when(productRepository.findById(productId)).thenReturn(Optional.empty());
+
+        // Act
+        ProductDto result = productService.getProductById(productId);
+
+        // Assert
+        assertNull(result, "Kết quả phải là null khi không tìm thấy sản phẩm");
+    }
+
+    @Test
+    @DisplayName("TC_PRODUCT_BE_06: Xóa sản phẩm không tồn tại")
+    void testDeleteProduct_NotFound() {
+        // Arrange
+        Long productId = 999L;
+        when(productRepository.existsById(productId)).thenReturn(false);
+
+        // Act
+        boolean result = productService.deleteProduct(productId);
+
+        // Assert
+        assertFalse(result, "Kết quả phải là false khi không tìm thấy sản phẩm để xóa");
+        verify(productRepository, never()).deleteById(productId);
+    }
 }

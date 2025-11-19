@@ -1,37 +1,16 @@
+// tests/Login.integration.test.js - CẬP NHẬT
 import React from 'react';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
-// Nếu đã có component Login thì import, nếu chưa thì mock đơn giản
-// import Login from '../components/Login';
 import Login from '../components/Login';
 
-function Login() {
-  const [username, setUsername] = React.useState('');
-  const [password, setPassword] = React.useState('');
-  const [error, setError] = React.useState('');
-  const [message, setMessage] = React.useState('');
-  const handleSubmit = () => {
-    if (!username) setError('Username is required');
-    else if (!password) setError('Password is required');
-    else if (username === 'testuser' && password === 'Test123') {
-      setMessage('thanh cong');
-      setError('');
-    } else {
-      setError('Sai username hoặc password');
-      setMessage('');
-    }
-  };
-  return (
-    <div>
-      <input data-testid="username-input" value={username} onChange={e => setUsername(e.target.value)} />
-      <input data-testid="password-input" value={password} onChange={e => setPassword(e.target.value)} />
-      <button data-testid="login-button" onClick={handleSubmit}>Login</button>
-      {error && <div data-testid="username-error">{error}</div>}
-      {message && <div data-testid="login-message">{message}</div>}
-    </div>
-  );
-}
+// Mock fetch API
+global.fetch = jest.fn();
 
 describe('Login Component Integration Tests', () => {
+  beforeEach(() => {
+    // Clear mock trước mỗi test
+    fetch.mockClear();
+  });
   test('TC_LOGIN_INT_01: Hiển thị lỗi khi submit form rỗng', async () => {
     render(<Login />);
     
