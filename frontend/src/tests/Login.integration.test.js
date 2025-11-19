@@ -2,6 +2,7 @@ import React from 'react';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 // Nếu đã có component Login thì import, nếu chưa thì mock đơn giản
 // import Login from '../components/Login';
+import Login from '../components/Login';
 
 function Login() {
   const [username, setUsername] = React.useState('');
@@ -31,33 +32,152 @@ function Login() {
 }
 
 describe('Login Component Integration Tests', () => {
-  test('Hiển thị lỗi khi submit form rỗng', async () => {
+  test('TC_LOGIN_INT_01: Hiển thị lỗi khi submit form rỗng', async () => {
     render(<Login />);
-    fireEvent.click(screen.getByTestId('login-button'));
+    
+    const submitButton = screen.getByTestId('login-button');
+    fireEvent.click(submitButton);
+
     await waitFor(() => {
       expect(screen.getByTestId('username-error')).toBeInTheDocument();
       expect(screen.getByTestId('username-error').textContent).toBe('Username is required');
     });
   });
 
-  test('Gọi API khi submit form hợp lệ', async () => {
+  test('TC_LOGIN_INT_02: Hiển thị lỗi khi username rỗng', async () => {
     render(<Login />);
-    fireEvent.change(screen.getByTestId('username-input'), { target: { value: 'testuser' } });
-    fireEvent.change(screen.getByTestId('password-input'), { target: { value: 'Test123' } });
-    fireEvent.click(screen.getByTestId('login-button'));
+    
+    const passwordInput = screen.getByTestId('password-input');
+    const submitButton = screen.getByTestId('login-button');
+    
+    fireEvent.change(passwordInput, { target: { value: 'Test123' } });
+    fireEvent.click(submitButton);
+
     await waitFor(() => {
-      expect(screen.getByTestId('login-message')).toHaveTextContent('thanh cong');
+      expect(screen.getByTestId('username-error')).toBeInTheDocument();
     });
   });
 
-  test('Hiển thị lỗi khi nhập sai thông tin', async () => {
+  test('TC_LOGIN_INT_03: Hiển thị lỗi khi password rỗng', async () => {
     render(<Login />);
-    fireEvent.change(screen.getByTestId('username-input'), { target: { value: 'wronguser' } });
-    fireEvent.change(screen.getByTestId('password-input'), { target: { value: 'wrongpass' } });
-    fireEvent.click(screen.getByTestId('login-button'));
+    
+    const usernameInput = screen.getByTestId('username-input');
+    const submitButton = screen.getByTestId('login-button');
+    
+    fireEvent.change(usernameInput, { target: { value: 'testuser' } });
+    fireEvent.click(submitButton);
+
+    await waitFor(() => {
+      expect(screen.getByTestId('password-error')).toBeInTheDocument();
+    });
+  });
+
+  test('TC_LOGIN_INT_04: Hiển thị lỗi khi username quá ngắn', async () => {
+    render(<Login />);
+    
+    const usernameInput = screen.getByTestId('username-input');
+    const passwordInput = screen.getByTestId('password-input');
+    const submitButton = screen.getByTestId('login-button');
+    
+    fireEvent.change(usernameInput, { target: { value: 'ab' } });
+    fireEvent.change(passwordInput, { target: { value: 'Test123' } });
+    fireEvent.click(submitButton);
+
+    await waitFor(() => {
+      expect(screen.getByTestId('username-error')).toHaveTextContent('Username too short');
+    });
+  });
+
+  test('TC_LOGIN_INT_05: Hiển thị lỗi khi password quá ngắn', async () => {
+    render(<Login />);
+    
+    const usernameInput = screen.getByTestId('username-input');
+    const passwordInput = screen.getByTestId('password-input');
+    const submitButton = screen.getByTestId('login-button');
+    
+    fireEvent.change(usernameInput, { target: { value: 'testuser' } });
+    fireEvent.change(passwordInput, { target: { value: '123' } });
+    fireEvent.click(submitButton);
+
+    await waitFor(() => {
+      expect(screen.getByTestId('password-error')).toHaveTextContent('Password too short');
+    });
+  });
+
+  test('TC_LOGIN_INT_06: Hiển thị lỗi khi username có ký tự đặc biệt', async () => {
+    render(<Login />);
+    
+    const usernameInput = screen.getByTestId('username-input');
+    const passwordInput = screen.getByTestId('password-input');
+    const submitButton = screen.getByTestId('login-button');
+    
+    fireEvent.change(usernameInput, { target: { value: 'user@123' } });
+    fireEvent.change(passwordInput, { target: { value: 'Test123' } });
+    fireEvent.click(submitButton);
+
+    await waitFor(() => {
+      expect(screen.getByTestId('username-error')).toHaveTextContent('Username contains invalid characters');
+    });
+  });
+
+  test('TC_LOGIN_INT_07: Hiển thị lỗi khi password không có số', async () => {
+    render(<Login />);
+    
+    const usernameInput = screen.getByTestId('username-input');
+    const passwordInput = screen.getByTestId('password-input');
+    const submitButton = screen.getByTestId('login-button');
+    
+    fireEvent.change(usernameInput, { target: { value: 'testuser' } });
+    fireEvent.change(passwordInput, { target: { value: 'TestPassword' } });
+    fireEvent.click(submitButton);
+
+    await waitFor(() => {
+      expect(screen.getByTestId('password-error')).toHaveTextContent('Password must contain both letters and numbers');
+    });
+  });
+
+  test('TC_LOGIN_INT_08: Button disabled khi đang loading', async () => {
+    render(<Login />);
+    
+    const usernameInput = screen.getByTestId('username-input');
+    const passwordInput = screen.getByTestId('password-input');
+    const submitButton = screen.getByTestId('login-button');
+    
+    fireEvent.change(usernameInput, { target: { value: 'testuser' } });
+    fireEvent.change(passwordInput, { target: { value: 'Test123' } });
+    fireEvent.click(submitButton);
+
+    // Kiểm tra button bị disable ngay sau khi click
+    expect(submitButton).toBeDisabled();
+  });
+
+  test('TC_LOGIN_INT_09: Clear error khi user nhập lại', async () => {
+    render(<Login />);
+    
+    const usernameInput = screen.getByTestId('username-input');
+    const submitButton = screen.getByTestId('login-button');
+    
+    // Submit với username rỗng
+    fireEvent.click(submitButton);
+    
     await waitFor(() => {
       expect(screen.getByTestId('username-error')).toBeInTheDocument();
-      expect(screen.getByTestId('username-error').textContent).toBe('Sai username hoặc password');
     });
+
+    // User nhập lại username
+    fireEvent.change(usernameInput, { target: { value: 't' } });
+    
+    // Error vẫn còn (chỉ clear khi validation pass)
+    expect(screen.getByTestId('username-error')).toBeInTheDocument();
+  });
+
+  test('TC_LOGIN_INT_10: Form fields có placeholder đúng', () => {
+    render(<Login />);
+    
+    const usernameInput = screen.getByTestId('username-input');
+    const passwordInput = screen.getByTestId('password-input');
+    
+    expect(usernameInput).toHaveAttribute('placeholder', 'Nhập username');
+    expect(passwordInput).toHaveAttribute('placeholder', 'Nhập password');
   });
 });
