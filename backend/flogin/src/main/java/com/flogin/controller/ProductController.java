@@ -1,6 +1,6 @@
 package com.flogin.controller;
 
-import java.util.Map;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -66,11 +66,11 @@ public class ProductController {
     /**
      * GET /api/products - Lấy tất cả sản phẩm
      * 
-     * @return Map of all products
+     * @return List of all products
      */
     @GetMapping
-    public ResponseEntity<Map<Long, ProductDto>> getAllProducts() {
-        Map<Long, ProductDto> products = productService.getAllProducts();
+    public ResponseEntity<List<ProductDto>> getAllProducts() {
+        List<ProductDto> products = productService.getAllProducts();
         return ResponseEntity.ok(products);
     }
 

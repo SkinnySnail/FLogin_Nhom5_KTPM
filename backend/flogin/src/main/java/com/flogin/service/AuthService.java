@@ -1,15 +1,17 @@
 package com.flogin.service;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import com.flogin.dto.AuthResponse;
+import com.flogin.entity.User;
+import com.flogin.repository.UserRepository;
+import java.util.Optional;
 
 @Service
 public class AuthService {
-    
-    // Hardcoded user cho test (sau này sẽ dùng database)
-    private static final String VALID_USERNAME = "testuser";
-    private static final String VALID_PASSWORD = "Test123";
+
+    @Autowired
+    private UserRepository userRepository;
 
     /**
      * Authenticate user with username and password
@@ -22,24 +24,21 @@ public class AuthService {
         if (username == null || username.isEmpty()) {
             return new AuthResponse(false, "Username không được để trống");
         }
-        
         if (password == null || password.isEmpty()) {
             return new AuthResponse(false, "Password không được để trống");
         }
-        
         // Check if user exists
-        if (!username.equals(VALID_USERNAME)) {
+        Optional<User> userOpt = userRepository.findByUsername(username);
+        if (userOpt.isEmpty()) {
             return new AuthResponse(false, "Username không tồn tại");
         }
-        
+        User user = userOpt.get();
         // Check if password is correct
-        if (!password.equals(VALID_PASSWORD)) {
+        if (!user.getPassword().equals(password)) {
             return new AuthResponse(false, "Password không chính xác");
         }
-        
         // Generate token (simple implementation)
         String token = generateToken(username);
-        
         return new AuthResponse(true, "Đăng nhập thành công", token);
     }
 

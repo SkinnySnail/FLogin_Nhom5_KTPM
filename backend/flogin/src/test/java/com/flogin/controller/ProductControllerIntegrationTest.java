@@ -19,8 +19,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.flogin.dto.ProductDto;
 import com.flogin.service.ProductService;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Integration Tests cho ProductController
@@ -109,32 +109,27 @@ class ProductControllerIntegrationTest {
     @DisplayName("TC_PRODUCT_INT_04: GET /api/products - Lấy tất cả sản phẩm (200)")
     void testGetAllProducts_Success() throws Exception {
         // Arrange
-        Map<Long, ProductDto> mockProducts = new HashMap<>();
-        
+        List<ProductDto> mockProducts = new ArrayList<>();
         ProductDto product1 = new ProductDto();
         product1.setId(1L);
         product1.setName("Laptop Dell");
         product1.setPrice(15000000);
         product1.setQuantity(10);
-        
         ProductDto product2 = new ProductDto();
         product2.setId(2L);
         product2.setName("Mouse Logitech");
         product2.setPrice(200000);
         product2.setQuantity(50);
-
-        mockProducts.put(1L, product1);
-        mockProducts.put(2L, product2);
-
+        mockProducts.add(product1);
+        mockProducts.add(product2);
         when(productService.getAllProducts())
             .thenReturn(mockProducts);
-
         // Act & Assert
         mockMvc.perform(get("/api/products"))
             .andExpect(status().isOk())
-            .andExpect(jsonPath("$", aMapWithSize(2)))
-            .andExpect(jsonPath("$.['1'].name").value("Laptop Dell"))
-            .andExpect(jsonPath("$.['2'].name").value("Mouse Logitech"));
+            .andExpect(jsonPath("$", hasSize(2)))
+            .andExpect(jsonPath("$[0].name").value("Laptop Dell"))
+            .andExpect(jsonPath("$[1].name").value("Mouse Logitech"));
     }
 
     @Test
@@ -317,14 +312,12 @@ class ProductControllerIntegrationTest {
     @DisplayName("TC_PRODUCT_INT_15: GET /api/products - Empty list")
     void testGetAllProducts_EmptyList() throws Exception {
         // Arrange
-        Map<Long, ProductDto> emptyMap = new HashMap<>();
-
+        List<ProductDto> emptyList = new ArrayList<>();
         when(productService.getAllProducts())
-            .thenReturn(emptyMap);
-
+            .thenReturn(emptyList);
         // Act & Assert
         mockMvc.perform(get("/api/products"))
             .andExpect(status().isOk())
-            .andExpect(jsonPath("$", aMapWithSize(0)));
+            .andExpect(jsonPath("$", hasSize(0)));
     }
 }
