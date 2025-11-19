@@ -1,0 +1,26 @@
+{
+  "name": "flogin_nhom5_ktpm",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SkinnySnail/FLogin_Nhom5_KTPM.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/SkinnySnail/FLogin_Nhom5_KTPM/issues"
+  },
+  "homepage": "https://github.com/SkinnySnail/FLogin_Nhom5_KTPM#readme",
+  "devDependencies": {
+    "@babel/preset-react": "^7.28.5",
+    "@testing-library/jest-dom": "^6.9.1",
+    "@testing-library/react": "^16.3.0",
+    "jest": "^29.7.0"
+  }
+}
