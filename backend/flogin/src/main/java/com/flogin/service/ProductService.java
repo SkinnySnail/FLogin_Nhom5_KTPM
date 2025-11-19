@@ -1,26 +1,24 @@
 package com.flogin.service;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.concurrent.atomic.AtomicLong;
+
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
+import org.springframework.beans.factory.annotation.Autowired;
+
 import com.flogin.dto.ProductDto;
+
+import com.flogin.entity.Product;
+import com.flogin.repository.ProductRepository;
 
 @Service
 public class ProductService {
-    
-    // Simulate database with HashMap
-    private static final Map<Long, ProductDto> productDatabase = new HashMap<>();
-    private static final AtomicLong idCounter = new AtomicLong(1L);
-    
-    // Pre-populate with sample data
-    static {
-        ProductDto sampleProduct = new ProductDto("Laptop Dell", 15000000, 10, "Electronics");
-        sampleProduct.setId(1L);
-        productDatabase.put(1L, sampleProduct);
-    }
+
+    @Autowired
+    private ProductRepository productRepository;
 
     /**
      * Create a new product
@@ -28,10 +26,9 @@ public class ProductService {
      * @return created product with ID
      */
     public ProductDto createProduct(ProductDto productDto) {
-        Long id = idCounter.incrementAndGet();
-        productDto.setId(id);
-        productDatabase.put(id, productDto);
-        return productDto;
+        Product product = dtoToEntity(productDto);
+        Product saved = productRepository.save(product);
+        return entityToDto(saved);
     }
 
     /**
@@ -40,7 +37,8 @@ public class ProductService {
      * @return product data or null if not found
      */
     public ProductDto getProductById(Long id) {
-        return productDatabase.getOrDefault(id, null);
+        Optional<Product> productOpt = productRepository.findById(id);
+        return productOpt.map(this::entityToDto).orElse(null);
     }
 
     /**
@@ -50,27 +48,26 @@ public class ProductService {
      * @return updated product
      */
     public ProductDto updateProduct(Long id, ProductDto updateDto) {
-        if (productDatabase.containsKey(id)) {
-            ProductDto existingProduct = productDatabase.get(id);
-            
+        Optional<Product> productOpt = productRepository.findById(id);
+        if (productOpt.isPresent()) {
+            Product product = productOpt.get();
             if (updateDto.getName() != null) {
-                existingProduct.setName(updateDto.getName());
+                product.setName(updateDto.getName());
             }
             if (updateDto.getPrice() > 0) {
-                existingProduct.setPrice(updateDto.getPrice());
+                product.setPrice(updateDto.getPrice());
             }
             if (updateDto.getQuantity() >= 0) {
-                existingProduct.setQuantity(updateDto.getQuantity());
+                product.setQuantity(updateDto.getQuantity());
             }
             if (updateDto.getCategory() != null) {
-                existingProduct.setCategory(updateDto.getCategory());
+                product.setCategory(updateDto.getCategory());
             }
             if (updateDto.getDescription() != null) {
-                existingProduct.setDescription(updateDto.getDescription());
+                product.setDescription(updateDto.getDescription());
             }
-            
-            productDatabase.put(id, existingProduct);
-            return existingProduct;
+            Product saved = productRepository.save(product);
+            return entityToDto(saved);
         }
         return null;
     }
@@ -81,8 +78,8 @@ public class ProductService {
      * @return true if deleted, false if not found
      */
     public boolean deleteProduct(Long id) {
-        if (productDatabase.containsKey(id)) {
-            productDatabase.remove(id);
+        if (productRepository.existsById(id)) {
+            productRepository.deleteById(id);
             return true;
         }
         return false;
@@ -90,9 +87,36 @@ public class ProductService {
 
     /**
      * Get all products
-     * @return map of all products
+     * @return list of all products
      */
-    public Map<Long, ProductDto> getAllProducts() {
-        return new HashMap<>(productDatabase);
+    public List<ProductDto> getAllProducts() {
+        List<Product> products = productRepository.findAll();
+        return products.stream()
+                .map(this::entityToDto)
+                .collect(Collectors.toList());
+    }
+
+    // Helper: Convert DTO to Entity
+    private Product dtoToEntity(ProductDto dto) {
+        Product entity = new Product();
+        entity.setId(dto.getId());
+        entity.setName(dto.getName());
+        entity.setPrice(dto.getPrice());
+        entity.setQuantity(dto.getQuantity());
+        entity.setCategory(dto.getCategory());
+        entity.setDescription(dto.getDescription());
+        return entity;
+    }
+
+    // Helper: Convert Entity to DTO
+    private ProductDto entityToDto(Product entity) {
+        ProductDto dto = new ProductDto();
+        dto.setId(entity.getId());
+        dto.setName(entity.getName());
+        dto.setPrice(entity.getPrice());
+        dto.setQuantity(entity.getQuantity());
+        dto.setCategory(entity.getCategory());
+        dto.setDescription(entity.getDescription());
+        return dto;
     }
 }
