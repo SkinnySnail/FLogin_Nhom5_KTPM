@@ -1,6 +1,6 @@
-package com.crud.crud.application.dto;
+package com.flogin.dto;
 
-import com.crud.crud.application.entity.Product;
+import com.flogin.entity.Product;
 
 public class ProductDto {
     private Long id;

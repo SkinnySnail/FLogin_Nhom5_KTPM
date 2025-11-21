@@ -1,4 +1,4 @@
-package com.crud.crud.application;
+package com.flogin;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

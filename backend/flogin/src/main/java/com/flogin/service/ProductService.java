@@ -1,16 +1,40 @@
-package com.crud.crud.application.service;
+package com.flogin.service;
 
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import com.crud.crud.application.dto.ProductDto;
-import com.crud.crud.application.entity.Product;
-import com.crud.crud.application.repository.ProductRepository;
+import com.flogin.dto.ProductDto;
+import com.flogin.entity.Product;
+import com.flogin.repository.ProductRepository;
 
 @Service
 public class ProductService {
+        // Helper: Convert Product entity to ProductDto
+        public ProductDto toDto(Product product) {
+            if (product == null) return null;
+            ProductDto dto = new ProductDto();
+            dto.setId(product.getId());
+            dto.setName(product.getProductName());
+            dto.setPrice(product.getPrice());
+            dto.setQuantity(product.getQuantity());
+            dto.setCategory(product.getCategory());
+            dto.setDescription(product.getDescription());
+            return dto;
+        }
+
+        // Helper: Convert ProductDto to Product entity
+        public Product fromDto(ProductDto dto) {
+            if (dto == null) return null;
+            Product product = new Product();
+            product.setId(dto.getId());
+            product.setProductName(dto.getName());
+            product.setPrice(dto.getPrice());
+            product.setQuantity(dto.getQuantity());
+            product.setCategory(dto.getCategory());
+            product.setDescription(dto.getDescription());
+            return product;
+        }
     @Autowired
     private ProductRepository productRepository;
 
@@ -28,9 +52,10 @@ public class ProductService {
      * @param productDto product data to create
      * @return created product with ID
      */
-    public Product createProduct(ProductDto productDto) {
+    public ProductDto createProduct(ProductDto productDto) {
         Product product = productDto.toEntity();
-        return productRepository.save(product);
+        Product saved = productRepository.save(product);
+        return toDto(saved);
     }
 
     /**
@@ -39,8 +64,9 @@ public class ProductService {
      * @param id product ID
      * @return product data or null if not found
      */
-    public Product getProductById(Long id) {
-        return productRepository.findById(id).orElse(null);
+    public ProductDto getProductById(Long id) {
+        Product product = productRepository.findById(id).orElse(null);
+        return toDto(product);
     }
 
     /**
@@ -50,7 +76,7 @@ public class ProductService {
      * @param productDto new product data
      * @return updated product
      */
-    public Product updateProduct(Long id, ProductDto productDto) {
+    public ProductDto updateProduct(Long id, ProductDto productDto) {
         return productRepository.findById(id).map(existingProduct -> {
             if (productDto.getName() != null && !productDto.getName().trim().isEmpty()) {
                 existingProduct.setProductName(productDto.getName());
@@ -67,7 +93,8 @@ public class ProductService {
             if (productDto.getDescription() != null) {
                 existingProduct.setDescription(productDto.getDescription());
             }
-            return productRepository.save(existingProduct);
+            Product saved = productRepository.save(existingProduct);
+            return toDto(saved);
         }).orElse(null);
     }
 
@@ -90,7 +117,8 @@ public class ProductService {
      * 
      * @return list of all products
      */
-    public List<Product> getAllProducts() {
-        return productRepository.findAll();
+    public List<ProductDto> getAllProducts() {
+        List<Product> products = productRepository.findAll();
+        return products.stream().map(this::toDto).toList();
     }
 }
