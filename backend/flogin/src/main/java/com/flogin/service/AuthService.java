@@ -40,7 +40,36 @@ public class AuthService {
         }
         // Generate token (simple implementation)
         String token = generateToken(username);
-        return new AuthResponse(true, "Đăng nhập thành công", token);
+        Long expiresIn = 86400000L; // 24 hours in milliseconds
+        return new AuthResponse(true, "Đăng nhập thành công", token, username, expiresIn);
+    }
+
+    /**
+     * Register a new user
+     * @param username username for new user
+     * @param password password for new user
+     * @return AuthResponse with success status
+     */
+    public AuthResponse register(String username, String password) {
+        // Validate input
+        if (username == null || username.isEmpty()) {
+            return new AuthResponse(false, "Username không được để trống");
+        }
+        if (password == null || password.isEmpty()) {
+            return new AuthResponse(false, "Password không được để trống");
+        }
+        
+        // Check if username already exists
+        Optional<User> existingUser = userRepository.findByUsername(username);
+        if (existingUser.isPresent()) {
+            return new AuthResponse(false, "Username đã tồn tại");
+        }
+        
+        // Create new user
+        User newUser = new User(username, password);
+        userRepository.save(newUser);
+        
+        return new AuthResponse(true, "Đăng ký thành công");
     }
 
     /**

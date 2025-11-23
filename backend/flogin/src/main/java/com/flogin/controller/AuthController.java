@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import com.flogin.dto.AuthResponse;
 import com.flogin.dto.LoginRequest;
+import com.flogin.dto.RegisterRequest;
 import com.flogin.service.AuthService;
 
 /**
@@ -49,6 +50,34 @@ public class AuthController {
         } else {
             return ResponseEntity
                 .status(HttpStatus.UNAUTHORIZED)
+                .body(response);
+        }
+    }
+
+    /**
+     * POST /api/auth/register - Đăng ký user mới
+     * 
+     * @param request RegisterRequest với username và password
+     * @return AuthResponse với success status
+     */
+    @PostMapping("/register")
+    public ResponseEntity<AuthResponse> register(@RequestBody RegisterRequest request) {
+        // Validate request body không null
+        if (request == null) {
+            return ResponseEntity
+                .badRequest()
+                .body(new AuthResponse(false, "Request body không được rỗng"));
+        }
+
+        // Gọi service để register
+        AuthResponse response = authService.register(request.getUsername(), request.getPassword());
+
+        // Trả về response với status code phù hợp
+        if (response.isSuccess()) {
+            return ResponseEntity.status(HttpStatus.CREATED).body(response);
+        } else {
+            return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
                 .body(response);
         }
     }
