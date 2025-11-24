@@ -7,14 +7,14 @@ export default function AddProduct() {
   let navigate = useNavigate();
 
   const [product, setProduct] = useState({
-    name: "",
+    productName: "",
     price: "",
     quantity: "",
     description: "",
     category: "",
   });
 
-  const { name, price, quantity, description, category } = product;
+  const { productName, price, quantity, description, category } = product;
 
   const onInputChange = (e) => {
     setProduct({ ...product, [e.target.name]: e.target.value });
@@ -48,8 +48,8 @@ export default function AddProduct() {
                 type="text"
                 className="form-control"
                 placeholder="Enter product name"
-                name="name"
-                value={name}
+                name="productName"
+                value={productName}
                 onChange={(e) => onInputChange(e)}
               />
             </div>

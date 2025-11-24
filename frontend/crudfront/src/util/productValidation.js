@@ -5,12 +5,15 @@ export const VALID_CATEGORIES = ['Electronics', 'Clothing', 'Food', 'Books', 'To
 export function validateProduct(product) {
   const errors = {};
 
+  // Get product name from either 'name' or 'productName' field
+  const productName = product.productName || product.name;
+
   // Validate Product Name
-  if (!product.name || product.name.trim() === '') {
+  if (!productName || productName.trim() === '') {
     errors.name = 'Product name is required';
-  } else if (product.name.length < 3) {
+  } else if (productName.length < 3) {
     errors.name = 'Product name too short';
-  } else if (product.name.length > 100) {
+  } else if (productName.length > 100) {
     errors.name = 'Product name too long';
   }
 

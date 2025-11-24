@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
-import { validateProduct } from "../util/productValidation";
+import { validateProduct, VALID_CATEGORIES } from "../util/productValidation";
 import axiosInstance from "../util/axiosConfig";
 
 export default function EditProduct() {
@@ -9,14 +9,14 @@ export default function EditProduct() {
   const { id } = useParams();
 
   const [product, setProduct] = useState({
-    name: "",
+    productName: "",
     price: "",
     quantity: "",
     description: "",
     category: "",
   });
 
-  const { name, price, quantity, description, category } = product;
+  const { productName, price, quantity, description, category } = product;
 
   const onInputChange = (e) => {
     setProduct({ ...product, [e.target.name]: e.target.value });
@@ -59,8 +59,8 @@ export default function EditProduct() {
                 type="text"
                 className="form-control"
                 placeholder="Enter product name"
-                name="name"
-                value={name}
+                name="productName"
+                value={productName}
                 onChange={(e) => onInputChange(e)}
               />
             </div>
@@ -106,14 +106,19 @@ export default function EditProduct() {
               <label htmlFor="Category" className="form-label">
                 Category
               </label>
-              <input
-                type="text"
+              <select
                 className="form-control"
-                placeholder="Enter category"
                 name="category"
                 value={category}
                 onChange={(e) => onInputChange(e)}
-              />
+              >
+                <option value="">Select a category</option>
+                {VALID_CATEGORIES.map((cat) => (
+                  <option key={cat} value={cat}>
+                    {cat}
+                  </option>
+                ))}
+              </select>
             </div>
             <button type="submit" className="btn btn-outline-primary">
               Submit

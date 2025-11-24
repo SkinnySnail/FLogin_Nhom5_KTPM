@@ -5,6 +5,7 @@ import com.flogin.entity.Product;
 public class ProductDto {
     private Long id;
     private String name;
+    private String productName; // Support both field names
     private Double price;
     private Integer quantity;
     private String category;
@@ -30,11 +31,21 @@ public class ProductDto {
     }
 
     public String getName() {
-        return name;
+        return name != null ? name : productName;
     }
 
     public void setName(String name) {
         this.name = name;
+        this.productName = name; // Keep both in sync
+    }
+
+    public String getProductName() {
+        return productName != null ? productName : name;
+    }
+
+    public void setProductName(String productName) {
+        this.productName = productName;
+        this.name = productName; // Keep both in sync
     }
 
     public Double getPrice() {
@@ -72,7 +83,9 @@ public class ProductDto {
     public Product toEntity() {
         Product product = new Product();
         product.setId(this.id);
-        product.setProductName(this.name);
+        // Use productName if available, otherwise use name
+        String nameToUse = this.productName != null ? this.productName : this.name;
+        product.setProductName(nameToUse);
         product.setPrice(this.price);
         product.setQuantity(this.quantity);
         if (this.category != null) {
@@ -85,7 +98,7 @@ public class ProductDto {
     public static ProductDto fromEntity(Product product) {
         ProductDto dto = new ProductDto();
         dto.setId(product.getId());
-        dto.setName(product.getProductName());
+        dto.setProductName(product.getProductName()); // This will set both name and productName
         dto.setPrice(product.getPrice());
         dto.setQuantity(product.getQuantity());
         dto.setCategory(product.getCategory());

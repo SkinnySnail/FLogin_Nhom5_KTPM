@@ -112,7 +112,6 @@ export default function Register() {
                                 name="username"
                                 value={username}
                                 onChange={(e) => onInputChange(e)}
-                                required
                             />
                             {errors.username && (
                                 <div className="invalid-feedback">{errors.username}</div>
@@ -133,7 +132,6 @@ export default function Register() {
                                 name="password"
                                 value={password}
                                 onChange={(e) => onInputChange(e)}
-                                required
                             />
                             {errors.password && (
                                 <div className="invalid-feedback">{errors.password}</div>
@@ -154,7 +152,6 @@ export default function Register() {
                                 name="confirmPassword"
                                 value={confirmPassword}
                                 onChange={(e) => onInputChange(e)}
-                                required
                             />
                             {errors.confirmPassword && (
                                 <div className="invalid-feedback">{errors.confirmPassword}</div>

@@ -1,8 +1,9 @@
 import { render, screen } from '@testing-library/react';
 import App from './App';
 
-test('renders learn react link', () => {
+test('renders App component with Navbar', () => {
   render(<App />);
-  const linkElement = screen.getByText(/learn react/i);
-  expect(linkElement).toBeInTheDocument();
+  // Check if "Full Stack Application" text from Navbar is present
+  const navElement = screen.getByText(/Full Stack Application/i);
+  expect(navElement).toBeInTheDocument();
 });

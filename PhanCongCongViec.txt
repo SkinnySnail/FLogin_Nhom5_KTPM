@@ -1,0 +1,255 @@
+Kế hoạch Hành động
+Đồ án Kiểm Thử (5 thành viên)
+1. Khoa – Nhóm trưởng & CI/CD Lead (Câu 5)
+1.1 Mục tiêu
+Thiết lập toàn bộ hạ tầng kỹ thuật (repository, dependencies) cho việc kiểm thử.
+Chịu trách nhiệm chính cho Câu 5: xây dựng pipeline CI/CD (GitHub Actions) chạy tự động toàn bộ test.
+Tổng hợp báo cáo, screenshots, test reports từ các team thành file Bao_cao.pdf cuối cùng.
+1.2 Phạm vi & ranh giới
+Phạm vi: quản lý GitHub repo, file .github/workflows/ci.yml, cypress.config.js, cài đặt Page Object Model (POM), tổng hợp báo cáo.
+Không làm: viết chi tiết các file *Test.java hoặc *.test.js (việc của team FE và BE).
+1.3 Công việc chi tiết
+A. Setup Repository
+Tạo GitHub repo, setup .gitignore.
+Đảm bảo pom.xml (Backend) và package.json (Frontend) chứa đủ thư viện testing (JUnit, Mockito, Jest, RTL, Cypress).
+B. Test Case Design (Câu 1)
+Chủ trì buổi họp phân tích Câu 1.
+Tạo file TESTCASES.md hoặc Google Sheet chung để 2 team FE/BE điền test case chi tiết.
+C. E2E & CI/CD Setup (Câu 5)
+Cài đặt và cấu hình Cypress (cypress.config.js).
+Viết file ProductPage.js (Page Object Model) theo mẫu đề bài.
+Viết workflow CI/CD .github/workflows/ci.yml bao gồm:
+actions/checkout@v2
+actions/setup-java@v2 (Backend)
+actions/setup-node@v2 (Frontend)
+Chạy Backend Tests: mvnw clean test (Unit + Integration Test BE)
+Chạy Frontend Tests: npm install && npm test (Unit + Integration Test FE)
+Chạy E2E Tests: npm run test:e2e (Cypress, FE + BE)
+(Nâng cao) Upload coverage reports bằng Codecov/JaCoCo.
+Setup notification CI (Slack/GitHub) khi test fail.
+Kiểm tra cross-browser cho E2E test (Chrome, Firefox) nếu cần.
+D. Tổng hợp & Báo cáo
+Review PRs của các team.
+Thu thập screenshots, coverage report từ các team.
+Viết file Bao_cao.pdf theo yêu cầu đề bài, bao gồm hình ảnh minh họa, test reports, coverage.
+1.4 Deliverables
+PRs: chore/ci-cd-setup, docs/pom-setup.
+Artefacts: .github/workflows/ci.yml, cypress/pages/ProductPage.js, TESTCASES.md, Bao_cao.pdf.
+1.5 Tiêu chí hoàn thành (DoD)
+PR merge vào main phải kích hoạt CI pipeline tự động.
+Pipeline báo cáo “Passed” nếu tất cả test thành công.
+Bao_cao.pdf tổng hợp đủ 5 phần, có hình minh họa, test report, coverage.
+1.6 Phối hợp & phụ thuộc
+FE (Thịnh, Thái): cung cấp npm test và npm run test:e2e.
+BE (Tài, Hoàng): cung cấp mvnw clean test.
+________________________________________
+2. Thịnh & Thái – Frontend Test Team (Câu 1,2,3,4,5)
+2.1 Mục tiêu
+Hoàn thành toàn bộ phần kiểm thử Frontend (React) cho Login & Product.
+Viết Unit Test (TDD) cho validation, coverage >= 90%.
+Viết Integration Test cho component Login, ProductForm.
+Viết kịch bản E2E Test (Cypress).
+2.2 Phạm vi & ranh giới
+Phạm vi: file *.test.js, *.spec.js, làm việc với Jest, RTL, Cypress.
+Không làm: code Java, file .yml CI/CD.
+2.3 Công việc chi tiết
+A. Test Case Design (Câu 1)
+Viết 5 test cases chi tiết cho Login (theo template Bảng 1).
+Viết 5 test cases chi tiết cho Product (theo template Bảng 2).
+Bao gồm happy path, negative tests, boundary, edge cases.
+B. Unit Testing & TDD (Câu 2)
+validation.test.js: test validateUsername(), validatePassword() (rỗng, quá ngắn/dài, sai format, hợp lệ).
+productValidation.test.js: test validateProduct() (name rỗng, price/quantity min/max, description > 500, category hợp lệ).
+C. Integration Testing (Câu 3)
+Login.integration.test.js: render(<Login />), fireEvent.change, fireEvent.click, waitFor error/success messages.
+ProductForm.integration.test.js: tương tự, test form CRUD.
+D. Mock Testing (Câu 4)
+Login.mock.test.js: jest.mock('../services/authService') – test login success/fail.
+Product.mock.test.js: mock productService – test Create/Get/Update/Delete Product.
+E. E2E Automation (Câu 5)
+login.e2e.spec.js: Cypress test flow login success/fail.
+product.e2e.spec.js: Cypress test flow CRUD Product với POM ProductPage.js.
+F. Bổ sung mới
+Unit Test edge cases: ký tự đặc biệt, khoảng trắng đầu/cuối, max/min length.
+Integration Test với mockService, dữ liệu rỗng/lớn/trùng tên.
+E2E Test thêm login failure, product CRUD failure, search/filter.
+Documentation & Evidence: FE_Test_Report.md, screenshots, video.
+2.4 Deliverables
+PRs: feat/fe-test-cases, feat/fe-unit-tests, feat/fe-integration-tests, feat/fe-e2e-scenarios.
+Artefacts: file *.test.js, *.spec.js, screenshot coverage >= 90%, video E2E test.
+2.5 Tiêu chí hoàn thành (DoD)
+npm test và npm run test:e2e chạy pass trên CI.
+Toàn bộ test cases (Câu 1) được implement.
+Coverage đạt yêu cầu.
+2.6 Phối hợp & phụ thuộc
+Khoa (Lead): setup CI pipeline & POM E2E.
+BE (Tài, Hoàng): cung cấp DTOs / JSON structure để mock chính xác.
+________________________________________
+3. Tài & Hoàng – Backend Test Team (Câu 1,2,3,4)
+3.1 Mục tiêu
+Hoàn thành kiểm thử Backend (Spring Boot) cho Login & Product.
+Viết Unit Test tầng Service (coverage >= 85%).
+Viết Integration Test tầng Controller (API endpoints).
+3.2 Phạm vi & ranh giới
+Phạm vi: file *Test.java làm việc với JUnit 5, Mockito, MockMvc.
+Không làm: React code, file .yml CI/CD.
+3.3 Công việc chi tiết
+A. Test Case Design (Câu 1)
+Viết test case logic backend: username không tồn tại, password sai, validation server.
+B. Unit Testing & TDD (Câu 2)
+AuthServiceTest.java: @Mock UserRepository, @InjectMocks AuthService. Test authenticate(): success, user không tồn tại, sai password.
+ProductServiceTest.java: @Mock ProductRepository, @InjectMocks ProductService. Test CRUD: create, getById, update, delete. Verify save gọi 1 lần.
+C. Integration Testing (Câu 3)
+AuthControllerIntegrationTest.java: @WebMvcTest(AuthController.class), @MockBean AuthService. MockMvc POST /api/auth/login.
+ProductControllerIntegrationTest.java: GET / POST / PUT / DELETE endpoints, MockMvc, check status, response structure.
+D. Mock Testing (Câu 4)
+Backend mock củng cố từ Câu 2,3.
+ProductServiceMockTest.java: @Mock ProductRepository.
+AuthControllerMockTest.java: @MockBean AuthService.
+E. Bổ sung mới
+Unit Test edge cases backend: boundary values, invalid input.
+Integration Test tất cả API endpoints (GET, POST, PUT, DELETE, login) với nhiều scenario.
+Mock repository/controller layer, verify call đúng.
+JaCoCo report >= 85%, lưu log chi tiết.
+3.4 Deliverables
+PRs: feat/be-unit-tests, feat/be-integration-tests.
+Artefacts: file *Test.java, screenshot coverage >= 85%.
+3.5 Tiêu chí hoàn thành (DoD)
+mvnw clean test pass trong CI pipeline.
+Coverage đạt yêu cầu.
+API endpoints ready cho team FE và E2E test.
+3.6 Phối hợp & phụ thuộc
+Khoa: setup CI pipeline để chạy mvnw clean test.
+FE (Thịnh/Thái): cung cấp DTOs / JSON structure.
+________________________________________
+4. Tất cả team – Phối hợp & Giao tiếp
+Dùng Google Sheet / TESTCASES.md để track test case status.
+Merge PR chỉ khi test pass local + CI.
+Ghi chú tất cả lỗi trong bug tracker (GitHub Issues).
+Mỗi team cung cấp evidence (screenshots, coverage, video) cho Khoa tổng hợp.
+________________________________________
+5. Deliverables chung
+Code & Test: tất cả *.java, *.test.js, *.spec.js, ProductPage.js, CI/CD workflow.
+Reports: FE_Test_Report.md, BE_Test_Report.md, Bao_cao.pdf.
+Evidence: screenshots, video E2E test.
+CI/CD: workflow hoạt động tự động, báo cáo test & coverage.
+________________________________________
+6. Gợi ý tổ chức nhánh Git
+main: stable, merge chỉ khi test pass.
+develop: tích hợp chung
+feature/fe-login, feature/fe-product
+feature/be-login, feature/be-product
+feature/ci-cd: Khoa setup pipeline.
+________________________________________
+✅ Kết luận
+Bảng phân công đã gộp cả cũ + bổ sung mới, cực kỳ chi tiết, rõ ràng về:
+Vai trò, công việc theo câu hỏi Assignment2.
+Phân chia FE/BE + Lead CI/CD.
+DoD, deliverables, phối hợp.
+Edge cases, evidence, CI/CD workflow.
+Nhóm bạn triển khai theo kế hoạch này sẽ không bỏ sót bất kỳ nhiệm vụ nào, dễ kiểm soát tiến độ và chất lượng.
+=======================================================
+ Kế hoạch Sprint (Từ 10/11 đến 19/11)
+Giai đoạn 1: Unit Test (Deadline 13/11)
+Hôm nay (Thứ Hai, 10/11): Khởi động & Câu 1
+Khoa (Lead):
+Việc chính: Hoàn thành và gửi file TESTCASES.md (hoặc Google Sheet) cho cả nhóm. (Như trong tin nhắn "câu 1 tầm tới có nha").
+Việc phụ: Setup hoàn chỉnh GitHub repo, tạo 2 nhánh back_end_dev và front_end_dev, cài đặt branch protection cho main.
+Team BE (Tài, Hoàng):
+Bị chặn (Sáng): Chờ file "Câu 1" từ Khoa.
+Việc chuẩn bị: Họp team, đọc kỹ mục 3 (Backend Test Team) trong file PhanCongCongViec1.docx . Cài đặt môi trường, đảm bảo mvnw hoạt động.
+Việc chính (Chiều/Tối): Ngay khi Khoa gửi file Câu 1, vào điền chi tiết các test case của Backend (mục 3.3 A ).
+Team FE (Thịnh, Thái):
+Bị chặn (Sáng): Chờ file "Câu 1" từ Khoa.
+Việc chuẩn bị: Họp team, đọc kỹ mục 2 (Frontend Test Team) . Cài đặt môi trường (Node, Jest, RTL).
+Việc chính (Chiều/Tối): Ngay khi Khoa gửi file Câu 1, vào điền chi tiết các test case của Frontend (mục 2.3 A ).
+________________________________________
+Thứ Ba, 11/11: Bắt đầu TDD - Câu 2 (Unit Test)
+Team BE (Tài, Hoàng):
+Tuân thủ TDD (Test-First):
+(Push 1) Tạo file AuthServiceTest.java (rỗng, có các test case fail).
+(Push 2) Viết code AuthService.java (logic) để pass các test đó.
+Nhiệm vụ: Tập trung hoàn thành test cho AuthService (mục 3.3 B ).
+Branch: Commit liên tục lên back_end_dev.
+Team FE (Thịnh, Thái):
+Tuân thủ TDD (Test-First):
+(Push 1) Tạo file validation.test.js (fail).
+(Push 2) Viết code validation.js (logic) để pass.
+Nhiệm vụ: Tập trung hoàn thành test cho validation (mục 2.3 B ).
+Branch: Commit liên tục lên front_end_dev.
+Khoa (Lead):
+Nhiệm vụ: Bắt đầu làm Câu 5. Cài đặt Cypress, viết file ProductPage.js (POM) (mục 1.3 C ).
+________________________________________
+Thứ Tư, 12/11: Tăng tốc & Hoàn thiện Câu 2
+Team BE (Tài, Hoàng):
+Tuân thủ TDD:
+(Push 3) Tạo file ProductServiceTest.java (fail).
+(Push 4) Viết code ProductService.java (logic) để pass.
+Nhiệm vụ: Hoàn thành các test case còn lại, bao gồm cả "edge cases" (mục 3.3 E ). Chạy mvnw clean test local, đảm bảo pass.
+Team FE (Thịnh, Thái):
+Tuân thủ TDD:
+(Push 3) Tạo productValidation.test.js (fail).
+(Push 4) Viết code productValidation.js (logic) để pass.
+Nhiệm vụ: Hoàn thành các test case validation còn lại (mục 2.3 B ). Chạy npm test local, đảm bảo pass.
+Khoa (Lead):
+Nhiệm vụ: Viết file ci.yml (cho GitHub Actions). Cấu hình step actions/setup-java và actions/setup-node.
+Hỗ trợ: Review code trên 2 nhánh _dev của các team.
+________________________________________
+Thứ Năm, 13/11: (DEADLINE 1) - Hoàn thành Unit Test
+Sáng (Tất cả):
+Team BE & FE: Hoàn thiện code, chạy coverage (JaCoCo cho BE, Jest cho FE). Đảm bảo đạt % yêu cầu (BE >= 85%, FE >= 90%).
+Tạo Pull Request (PR) từ nhánh _dev của mình vào develop (hoặc main, tùy quy trình của Khoa).
+Chiều (Khoa Lead):
+Việc chính: Review PRs. Merge code.
+Chạy CI: Chạy pipeline ci.yml lần đầu. Đảm bảo 2 job "Chạy Backend Tests" (mvnw) và "Chạy Frontend Tests" (npm test) phải PASS (báo XANH).
+Tối (Tất cả): Họp nhanh, bắt đầu Giai đoạn 2.
+________________________________________
+Giai đoạn 2: Integration, Mock, E2E (Deadline 19/11)
+Thứ Sáu, 14/11: Bắt đầu Câu 3 (Integration Test)
+Team BE (Tài, Hoàng):
+Nhiệm vụ: Bắt đầu viết AuthControllerIntegrationTest.java.
+TDD: Viết test (dùng MockMvc) cho API POST /api/auth/login (sẽ fail), sau đó viết code AuthController để pass.
+Team FE (Thịnh, Thái):
+Nhiệm vụ: Bắt đầu viết Login.integration.test.js.
+TDD: Viết test (dùng React Testing Library) để render(<Login />) và mô phỏng fireEvent.click (sẽ fail), sau đó viết code component Login để pass.
+Khoa (Lead):
+Nhiệm vụ: Viết kịch bản E2E (Cypress) cho luồng Login (login.e2e.spec.js).
+________________________________________
+Thứ Bảy, 15/11: Tăng tốc Câu 3 & Bắt đầu Câu 4 (Mock)
+Team BE (Tài, Hoàng):
+Nhiệm vụ: Viết ProductControllerIntegrationTest.java (test 5 API CRUD).
+Củng cố Câu 4: Đảm bảo sử dụng @MockBean cho AuthService và ProductService trong các file Integration Test (mục 3.3 D ).
+Team FE (Thịnh, Thái):
+Nhiệm vụ: Viết ProductForm.integration.test.js.
+Làm Câu 4: Viết Login.mock.test.js và Product.mock.test.js dùng jest.mock (mục 2.3 D ).
+Khoa (Lead):
+Nhiệm vụ: Viết kịch bản E2E (Cypress) cho luồng Product (product.e2e.spec.js).
+________________________________________
+Chủ Nhật, 16/11: Ngày Đệm & E2E
+Tất cả: Ngày đệm để hoàn thành nốt Câu 3, 4 nếu bị trễ.
+Khoa (Lead):
+Nhiệm vụ: Cấu hình step "Chạy E2E Tests" (npm run test:e2e) vào file ci.yml.
+Team BE & FE:
+Phối hợp: Họp với nhau, đối chiếu DTOs/JSON (mục 2.6 và 3.6 ) để đảm bảo API của BE và Mock của FE khớp nhau.
+________________________________________
+Thứ Hai, 17/11: Tổng hợp Báo cáo
+Team BE (Tài, Hoàng):
+Nhiệm vụ: Chạy test lần cuối. Chụp ảnh màn hình JaCoCo coverage >= 85%. Gửi cho Khoa.
+Team FE (Thịnh, Thái):
+Nhiệm vụ: Chạy test lần cuối. Chụp ảnh màn hình Jest coverage >= 90%. Gửi cho Khoa.
+Khoa (Lead):
+Nhiệm vụ: Hợp nhất toàn bộ code. Chạy CI pipeline hoàn chỉnh (Câu 2, 3, 4, 5).
+Bắt đầu viết nội dung file Bao_cao.pdf (mục 1.3 D ).
+________________________________________
+Thứ Ba, 18/11: Sửa lỗi (Hardening)
+Tất cả: Cả nhóm xem kết quả CI pipeline.
+Nếu có test nào "Fail" (báo đỏ), cả nhóm phải tập trung sửa lỗi đó.
+Đây là ngày "dọn dẹp" (mục 4. Tất cả team ).
+Khoa (Lead):
+Nhiệm vụ: Hoàn thiện Bao_cao.pdf, thêm screenshots, videos E2E test.
+________________________________________
+Thứ Tư, 19/11: (DEADLINE 2) - Nộp bài
+Sáng:
+Tất cả: Review Bao_cao.pdf lần cuối.
+Khoa (Lead): Merge code vào main (như trong chat).
+Chiều: Nộp bài.
